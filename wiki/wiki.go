@@ -1,7 +1,8 @@
 package wiki
 
 import (
-	"fmt"
+	"log"
+	"net/http"
 	"os"
 )
 
@@ -10,10 +11,10 @@ type Page struct {
 	Body  []byte
 }
 
-func (p *Page) save() error {
-	filename := p.Title + ".txt"
-	return os.WriteFile(filename, p.Body, 0600)
-}
+// func (p *Page) save() error {
+// 	filename := p.Title + ".txt"
+// 	return os.WriteFile(filename, p.Body, 0600)
+// }
 
 func loadPage(title string) (*Page, error) {
 	filename := title + ".txt"
@@ -25,9 +26,8 @@ func loadPage(title string) (*Page, error) {
 }
 
 func Wiki() {
-	p1 := &Page{Title: "TestPage", Body: []byte("This is a sample page")}
-	p1.save()
-
-	p2, _ := loadPage("TestPage")
-	fmt.Println(string(p2.Body))
+	http.HandleFunc("/", handler)
+	http.HandleFunc("/view/", viewHandler)
+	http.HandleFunc("/edit/", editHandler)
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
