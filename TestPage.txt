@@ -1,1 +1,1 @@
-Body test page
+This is a sample page
